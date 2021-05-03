@@ -14,10 +14,30 @@ def retrieve_all_planets():
   return jsonify(planets)
 
 
-@solar_world_development_bp.route("/retrieve-one-planet/<planet_name>", methods=["GET"])
+@solar_world_development_bp.route("/retrieve-one-planet/<planet_name>", methods=["GET", "PUT", "DELETE"])
 def retrieve_one_planet(planet_name):
     planet = Planet.query.filter_by(name = planet_name).first()
-    return jsonify(planet)
+    
+    if request.method == "GET": 
+        return jsonify(planet)
+    elif request.method == "PUT": 
+        form_data = request.get_json()
+
+        planet.name = form_data["name"]
+        planet.description = form_data ["description"]
+        planet.color = form_data ["color"]
+
+        db.session.commit()
+
+        return make_response (f"Planet #{planet.id} sucessfully updated, 201")
+
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+        return make_response(f"Planet #{planet.id} successfully deleted, 200")
+
+
+    
 
 
 @solar_world_development_bp.route("/create-a-planet", methods=["POST"])
@@ -32,5 +52,4 @@ def create_a_planet():
 
     return make_response(f"Planet {new_planet.name} successfully created", 201)
 
-    # description = request.args.get("description")
-    # return models.get_something()
+    
