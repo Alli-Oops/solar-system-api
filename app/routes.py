@@ -17,9 +17,11 @@ def retrieve_all_planets():
 @solar_world_development_bp.route("/retrieve-one-planet/<planet_name>", methods=["GET", "PUT", "DELETE"])
 def retrieve_one_planet(planet_name):
     planet = Planet.query.filter_by(name = planet_name).first()
+    if planet is None: 
+        return make_response("The planet is not in the database", 404)
     
     if request.method == "GET": 
-        return jsonify(planet)
+        return jsonify(planet) 
     elif request.method == "PUT": 
         form_data = request.get_json()
 
@@ -31,11 +33,12 @@ def retrieve_one_planet(planet_name):
 
         return make_response (f"Planet #{planet.id} sucessfully updated, 201")
 
+       
+
     elif request.method == "DELETE":
         db.session.delete(planet)
         db.session.commit()
         return make_response(f"Planet #{planet.id} successfully deleted, 200")
-
 
     
 
