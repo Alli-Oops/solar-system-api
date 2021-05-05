@@ -2,17 +2,12 @@ from app import db
 from flask import Blueprint, request, make_response, jsonify
 from app.models.planet import Planet 
 
-
 solar_world_development_bp = Blueprint("Planet", __name__, url_prefix="/planets")
-
 
 @solar_world_development_bp.route("/retrieve-all-planets", methods=["GET"])
 def retrieve_all_planets():
-  planets = Planet.query.all() 
-
-
-  return jsonify(planets)
-
+    planets = Planet.query.all() 
+    return jsonify(planets)
 
 @solar_world_development_bp.route("/retrieve-one-planet/<planet_name>", methods=["GET", "PUT", "DELETE"])
 def retrieve_one_planet(planet_name):
@@ -33,15 +28,10 @@ def retrieve_one_planet(planet_name):
 
         return make_response (f"Planet #{planet.id} sucessfully updated, 201")
 
-       
-
     elif request.method == "DELETE":
         db.session.delete(planet)
         db.session.commit()
         return make_response(f"Planet #{planet.id} successfully deleted, 200")
-
-    
-
 
 @solar_world_development_bp.route("/create-a-planet", methods=["POST"])
 def create_a_planet():
@@ -54,5 +44,3 @@ def create_a_planet():
     db.session.commit()
 
     return make_response(f"Planet {new_planet.name} successfully created", 201)
-
-    

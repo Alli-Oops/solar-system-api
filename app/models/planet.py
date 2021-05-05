@@ -1,6 +1,7 @@
 from app import db
 from dataclasses import dataclass
 
+@dataclass # this was missing
 class Planet(db.Model):
     id: int
     name: str
